@@ -1,0 +1,4 @@
+24CS0477,Lokith S,2024-2028,CSE,MQ,180,9.04,leetcode track
+24IT0518,Muthuraj,2024-2028,IT,GQ,195,8.65,AI chatbot
+24CS0024,Abinav Kishore ,2023-2027,CSE,MQ,182,9.20,IoT home automation
+23EC0144,Karthik V,2023-2027,ECE,GQ,170,8.45,3D printed drone

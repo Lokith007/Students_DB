@@ -1,53 +1,65 @@
 import sqlite3
 
-# Connect to SQLite DB (will create file if not exists)
-conn = sqlite3.connect("college.db")
-cursor = conn.cursor()
+# Connect to SQLite DB
+conn=sqlite3.connect("college.db")
+cursor=conn.cursor()
 
-# Create alumni table
+# Drop old tables to avoid duplicates
+cursor.execute("DROP TABLE IF EXISTS students")
+cursor.execute("DROP TABLE IF EXISTS alumni")
+
+# Create fresh students table
 cursor.execute("""
-CREATE TABLE IF NOT EXISTS alumni (
+CREATE TABLE students(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    roll_number TEXT UNIQUE,
     name TEXT,
-    batch INTEGER,
+    batch TEXT,
     department TEXT,
+    quota TEXT,
+    cutoff REAL,
+    cgpa REAL,
+    projects_completed TEXT
+)
+""")
+
+# Create fresh alumni table (with placed column)
+cursor.execute("""
+CREATE TABLE alumni(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    registration_no TEXT UNIQUE,
+    name TEXT,
+    batch TEXT,
+    department TEXT,
+    placed TEXT,
     company TEXT,
     role TEXT
 )
 """)
 
-# Create students table
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS students (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    year INTEGER,
-    department TEXT,
-    email TEXT
-)
-""")
+# Load students from file
+with open("students.txt","r",encoding="utf-8") as f:
+    for line in f:
+        data=line.strip().split(",")
+        if len(data)==8:
+            cursor.execute("""
+            INSERT OR IGNORE INTO students
+            (roll_number,name,batch,department,quota,cutoff,cgpa,projects_completed)
+            VALUES (?,?,?,?,?,?,?,?)
+            """, data)
 
-# Insert sample alumni data
-cursor.executemany("""
-INSERT INTO alumni (name, batch, department, company, role)
-VALUES (?, ?, ?, ?, ?)
-""", [
-    ("Alice Johnson", 2020, "CSE", "Google", "Software Engineer"),
-    ("Bob Kumar", 2019, "ECE", "Microsoft", "Data Analyst"),
-    ("Priya Sharma", 2021, "CSE", "Amazon", "ML Engineer")
-])
+# Load alumni from file
+with open("alumni.txt","r",encoding="utf-8") as f:
+    for line in f:
+        data=line.strip().split(",")
+        if len(data)==7:
+            cursor.execute("""
+            INSERT OR IGNORE INTO alumni
+            (registration_no,name,batch,department,placed,company,role)
+            VALUES (?,?,?,?,?,?,?)
+            """, data)
 
-# Insert sample students data
-cursor.executemany("""
-INSERT INTO students (name, year, department, email)
-VALUES (?, ?, ?, ?)
-""", [
-    ("Rahul Mehta", 3, "CSE", "rahul@college.edu"),
-    ("Neha Singh", 2, "EEE", "neha@college.edu")
-])
-
-# Save and close
 conn.commit()
 conn.close()
 
-print("✅ Database setup complete! college.db created.")
+print("✅ Database setup complete! Data loaded without duplicates.")
