@@ -6,7 +6,7 @@ conn = sqlite3.connect("college.db")
 cursor = conn.cursor()
 
 print("Ask me (or type 'exit'):")
-
+ 
 while True:
     question = input("\n> ").strip()
     if question.lower() == "exit":
