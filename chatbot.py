@@ -10,7 +10,7 @@ print("Ask me (or type 'exit'):")
 while True:
     question = input("\n> ").strip()
     if question.lower() == "exit":
-        break
+        break  
 
     # Send to LLM to convert to SQL
     prompt = f"""
