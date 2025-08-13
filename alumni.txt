@@ -1,4 +1,0 @@
-20CS0101,Naveen,2020,CSE,Yes,Google,Software Engineer
-19IT0054,Dharshan,2019,IT,Yes,Amazon,Data Analyst
-20CS0110,Ananya,2020,CSE,Yes,Microsoft,Developer
-21ME0090,Arun Kumar,2021,ME,No,None,None
